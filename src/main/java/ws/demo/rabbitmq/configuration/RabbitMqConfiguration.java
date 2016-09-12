@@ -6,6 +6,8 @@ import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.connection.AbstractConnectionFactory;
+import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
+import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
 import org.springframework.context.annotation.Bean;
@@ -24,7 +26,7 @@ public class RabbitMqConfiguration {
 
     @Bean
     TopicExchange exchange() {
-        return new TopicExchange("ws-queue-exchange");
+        return new TopicExchange("hello.topic");
     }
 
     @Bean
@@ -33,7 +35,7 @@ public class RabbitMqConfiguration {
     }
 
     @Bean
-    SimpleMessageListenerContainer container(AbstractConnectionFactory connectionFactory,
+    SimpleMessageListenerContainer container(ConnectionFactory connectionFactory,
                                              MessageListenerAdapter listenerAdapter) {
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
@@ -43,12 +45,22 @@ public class RabbitMqConfiguration {
     }
 
     @Bean
+    AbstractConnectionFactory connectionFactory() {
+        com.rabbitmq.client.ConnectionFactory factory = new com.rabbitmq.client.ConnectionFactory();
+        factory.setHost("http://192.168.99.100");
+        factory.setPort(5672);
+        factory.setUsername("guest");
+        factory.setPassword("guest");
+        return new CachingConnectionFactory(factory);
+    }
+
+    @Bean
     MessageReceiver receiver() {
         return new MessageReceiver();
     }
 
     @Bean
     MessageListenerAdapter listenerAdapter(MessageReceiver receiver) {
-        return new MessageListenerAdapter(receiver, "receiveMessage");
+        return new MessageListenerAdapter(receiver, "onMessage");
     }
 }
