@@ -3,7 +3,7 @@ package ws.demo.rabbitmq.message;
 
 import java.util.concurrent.CountDownLatch;
 
-public class MessageReceiver {
+public class Receiver {
     private CountDownLatch latch = new CountDownLatch(1);
 
     public void onMessage(String message) {
@@ -14,4 +14,6 @@ public class MessageReceiver {
     public CountDownLatch getLatch() {
         return latch;
     }
+
+
 }

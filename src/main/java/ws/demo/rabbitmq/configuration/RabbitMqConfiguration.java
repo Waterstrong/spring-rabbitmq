@@ -13,7 +13,7 @@ import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import ws.demo.rabbitmq.message.MessageReceiver;
+import ws.demo.rabbitmq.message.Receiver;
 
 @Configuration
 public class RabbitMqConfiguration {
@@ -47,7 +47,7 @@ public class RabbitMqConfiguration {
     @Bean
     AbstractConnectionFactory connectionFactory() {
         com.rabbitmq.client.ConnectionFactory factory = new com.rabbitmq.client.ConnectionFactory();
-        factory.setHost("http://192.168.99.100");
+        factory.setHost("192.168.99.100");
         factory.setPort(5672);
         factory.setUsername("guest");
         factory.setPassword("guest");
@@ -55,12 +55,12 @@ public class RabbitMqConfiguration {
     }
 
     @Bean
-    MessageReceiver receiver() {
-        return new MessageReceiver();
+    Receiver receiver() {
+        return new Receiver();
     }
 
     @Bean
-    MessageListenerAdapter listenerAdapter(MessageReceiver receiver) {
+    MessageListenerAdapter listenerAdapter(Receiver receiver) {
         return new MessageListenerAdapter(receiver, "onMessage");
     }
 }
