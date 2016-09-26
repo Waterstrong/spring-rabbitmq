@@ -15,12 +15,13 @@ public class EmitLogTopic {
         Connection connection = factory.newConnection();
         Channel channel = connection.createChannel();
 
-        channel.exchangeDeclare(EXCHANGE_NAME, "topic");
+        channel.exchangeDeclare(EXCHANGE_NAME, "topic", true, false, false, null);
 
 //        String routingKey = getRouting(argv);
 //        String message = getMessage(argv);
 
-        String routingKey = "kern.critical";
+//        String routingKey = "kern.critical";
+        String routingKey = "";
         String message = "A critical kernel error";
 
         channel.basicPublish(EXCHANGE_NAME, routingKey, null, message.getBytes());
